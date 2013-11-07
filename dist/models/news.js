@@ -17,6 +17,12 @@ function News(news) {
 
 module.exports = News;
 
+/*
+{
+	"listeners":{ "$elemMatch":{ "$gt":200,"$lt":300 }}
+}
+ */
+
 News.prototype.save = function(callback) {
 	var time = this.date ? moment(this.date) : moment(),
 		post = {
