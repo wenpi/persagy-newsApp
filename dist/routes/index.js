@@ -5,7 +5,7 @@ var News = require("../models/news.js");
 
 module.exports = function(app) {
 	app.get('/', function(req, res) {
-		News.getPub(null, function(err, news) {
+		News.getList(true, function(err, news) {
 			if (err) {
 				news = [];
 			}
@@ -18,7 +18,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/time', function(req, res) {
-		News.getUnPub(null, function(err, news) {
+		News.getList(false, function(err, news) {
 			if (err) {
 				news = [];
 			}
@@ -33,7 +33,7 @@ module.exports = function(app) {
 	app.get('/edit', function(req, res) {
 		News.get(req.query.id, function(err, news) {
 			if (err) {
-				news = [];
+				news = {};
 			}
 			res.render('edit', {
 				title: '添加编辑',
