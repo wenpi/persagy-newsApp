@@ -3,6 +3,7 @@ var ObjectID = require('mongodb').ObjectID;
 var moment = require('moment');
 var EventProxy = require('eventproxy');
 var User = require('./users');
+var Group = require('./groups');
 
 function News(news) {
 	this.sign = news.sign || '';
@@ -91,12 +92,11 @@ News.getList = function(isPub, callback) {
 News.get = function(id, callback) {
 	var ep;
 	if (id) {
-		ep = EventProxy.create("news", "users", function(news, users) {
-			news.users = users;
+		ep = EventProxy.create("news", "groups", function(news, groups) {
 			mongo.close();
 			console.dir(news);
-			console.dir(news.users.length);
-			callback(null, news);
+			console.dir(groups);
+			callback(null, news, groups);
 		});
 		mongo.open(function(err, db) {
 			if (err) {
@@ -116,52 +116,14 @@ News.get = function(id, callback) {
 					ep.emit("news", doc);
 				});
 			});
-			db.collection('users', function(error, collection) {
-				if (error) {
-					mongo.close();
-					return callback(error);
+			Group.get(db, function(err, groups) {
+				if (err) {
+					return callback(err);
 				}
-				//todo 只查name和id
-				/**/
-				collection.find().sort({
-					userid: -1
-				}).toArray(function(err, users) {
-					if (error) {
-						return callback(error);
-					}
-					ep.emit("users", sortGroup(users));
-				});
+				ep.emit("groups", groups);
 			});
 		});
 	} else {
 		callback(null, new News({}));
 	}
 };
-
-function sortGroup(users) {
-	var i,
-		idStr,
-		user,
-		key,
-		result = [],
-		tempObj = {};
-	for (i = 0; i < users.length; i++) {
-		user = users[i];
-		idStr = "0000" + user.userid.substring(4, 5) + "00000000";
-		if (!tempObj[idStr]) {
-			tempObj[idStr] = [];
-		}
-		if (user.userid.slice(-4) !== "0000") {
-			tempObj[idStr].push({
-				name: user.name,
-				userid: user.userid
-			});
-		} else {
-
-		}
-	}
-	for (key in tempObj) {
-		result.push(tempObj[key]);
-	}
-	return result;
-}
