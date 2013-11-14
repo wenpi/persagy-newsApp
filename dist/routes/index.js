@@ -35,17 +35,61 @@ module.exports = function(app) {
 		News.get(req.query.id, function(err, news, groups) {
 			if (err) {
 				news = {};
+				groups = {};
 			}
 			res.render('edit', {
 				title: '添加编辑',
 				name: 'edit',
 				news: news,
-				groups: groups
+				groups: groups,
+				error: req.flash('error').toString(),
+				success: req.flash('success').toString()
 			});
 		});
 	});
 
-	app.get('/appGet', function(req, res) {
+	app.post('/edit', function(req, res) {
+		var body = req.body,
+			news = new News({
+				sign: body.sign,
+				title: body.title,
+				unit: body.unit,
+				subtitle: body.subtitle,
+				listeners: body.listeners,
+				text: body.text,
+				richText: body.richText,
+				date: body.date
+			});
+		console.dir(body);
+		news.save(function(err) {
+			if (err) {
+				req.flash('error', '发布失败!');
+			} else {
+				req.flash('success', '发布成功!');
+			}
+			res.redirect('/edit'); //注册成功后返回主页
+		});
+	});
+
+	app.get('/news/:id', function(req, res) {
+		News.getRichText(req.params.id, function(err, text) {
+			if (err) {
+				text = '操作异常';
+			}
+			res.render('news', {
+				title: '文章正文',
+				richText: text
+			});
+		});
+	});
+
+	app.get('/getNewsByDay', function(req, res) {
+		News.getByDay('lee', '2013-11-14', function(err, doc) {
+			// if (err) {
+			//	text = '操作异常';
+			// }
+			res.send(doc);
+		});
 
 	});
 
@@ -61,7 +105,8 @@ module.exports = function(app) {
 				msg: null,
 				code: '0000',
 				successful: true,
-				message: null
+				message: null,
+				intertype: 'landing'
 			};
 			if (err) {
 				result.msg = err;
@@ -74,9 +119,43 @@ module.exports = function(app) {
 				result.message = '密码错误';
 			} else {
 				result.successful = true;
-				result.code = '0000';
 			}
 			res.send(result);
+		});
+	});
+
+	app.post('/password', function(req, res) {
+		User.get(req.body.username, function(err, user) {
+			// var md5 = crypto.createHash('md5'),
+			//     password = md5.update(req.body.password).digest('hex');
+			console.dir(req.body);
+			console.log('username:', req.body.username);
+			console.log('oldPassword:', req.body.oldPassword);
+
+			var result = {
+				msg: null,
+				code: '0000',
+				successful: false,
+				message: null,
+				intertype: 'changePassword'
+			};
+			if (err) {
+				result.msg = err;
+				result.code = null;
+			} else if (user.userpwd !== req.body.oldPassword) {
+				result.successful = false;
+				result.message = '原密码不正确';
+			} else {
+				User.changePassword(req.body.username, req.body.newPassword, function() {
+					if (err) {
+						result.msg = err;
+						result.code = null;
+					} else {
+						result.successful = true;
+					}
+					res.send(result);
+				});
+			}
 		});
 	});
 };

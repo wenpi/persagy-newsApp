@@ -34,26 +34,29 @@ User.get = function(name, callback) {
 	});
 };
 
-// User.getAll = function(callback) {
-// 	mongo.open(function(error, db) {
-// 		if (error) {
-// 			return callback(error);
-// 		}
-// 		db.collection('users', function(error, collection) {
-// 			if (error) {
-// 				mongo.close();
-// 				return callback(error);
-// 			}
-// 			//todo 只查name和id
-// 			collection.find({}).sort({
-// 				id: -1
-// 			}).toArray(function(err, users) {
-// 				mongo.close();
-// 				if (error) {
-// 					return callback(error);
-// 				}
-// 				callback(null, sortGroup(users));
-// 			});;
-// 		});
-// 	});
-// };
+User.changePassword = function(name, pwd, callback) {
+	mongo.open(function(error, db) {
+		if (error) {
+			return callback(error);
+		}
+		db.collection('users', function(error, collection) {
+			if (error) {
+				mongo.close();
+				return callback(error);
+			}
+			collection.update({
+				username: name
+			}, {
+				$set: {
+					userpwd: pwd
+				}
+			}, function(err) {
+				mongo.close();
+				if (err) {
+					return callback(err);
+				}
+				callback(null);
+			});
+		});
+	});
+};

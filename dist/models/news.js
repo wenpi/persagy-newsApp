@@ -6,13 +6,23 @@ var User = require('./users');
 var Group = require('./groups');
 
 function News(news) {
+	var i,
+		str = news.listeners || '',
+		listeners = str.split(',');
+	for (i = listeners.length - 1; i >= 0; i--) {
+		if (listeners[i].length === 0) {
+			listeners.splice(i, 1);
+		}
+	}
+
 	this.sign = news.sign || '';
 	this.title = news.title || '';
 	this.unit = news.unit || '';
 	this.subtitle = news.subtitle || '';
 	this.text = news.text || '';
-	this.listeners = [];
-	this.date = '';
+	this.richText = news.richText || '';
+	this.listeners = listeners;
+	this.date = news.date || '';
 	this.month = '';
 	this.day = '';
 	this.isDel = false;
@@ -29,15 +39,20 @@ module.exports = News;
 
 News.prototype.save = function(callback) {
 	var time = this.date ? moment(this.date) : moment(),
+		isPub = this.date ? false : true,
 		post = {
 			sign: this.sign,
 			title: this.title,
 			unit: this.unit,
 			subtitle: this.subtitle,
 			text: this.text,
+			richText: this.richText,
+			listeners: this.listeners,
 			date: time.format("YYYY-MM-DD HH:mm:ss"),
 			month: time.format("YYYY-MM"),
-			day: time.format("YYYY-MM-DD")
+			day: time.format("YYYY-MM-DD"),
+			isDel: this.isDel,
+			isPub: isPub
 		};
 	mongo.open(function(err, db) {
 		if (err) {
@@ -124,6 +139,112 @@ News.get = function(id, callback) {
 			});
 		});
 	} else {
-		callback(null, new News({}));
+		mongo.open(function(err, db) {
+			if (err) {
+				return callback(err);
+			}
+			Group.get(db, function(err, groups) {
+				mongo.close();
+				if (err) {
+					return callback(err);
+				}
+				callback(null, new News({}), groups);
+			});
+		});
+
 	}
 };
+
+News.getRichText = function(id, callback) {
+	if (id && id.length === 24) {
+		mongo.open(function(err, db) {
+			if (err) {
+				return callback(err);
+			}
+			db.collection("news", function(err, collection) {
+				if (err) {
+					mongo.close();
+					return callback(err);
+				}
+				collection.findOne({
+					_id: ObjectID(id)
+				}, {
+					richText: 1,
+					_id: 0
+				}, function(err, doc) {
+					mongo.close();
+					if (err) {
+						return callback(err);
+					}
+					if (doc) {
+						callback(null, doc.richText);
+					} else {
+						callback(null, '未查询到文章');
+					}
+
+				});
+			});
+		});
+	} else {
+		callback(null, '参数不正确');
+	}
+};
+
+News.getByDay = function(username, date, callback) {
+	mongo.open(function(err, db) {
+		if (err) {
+			return callback(err);
+		}
+		Group.getListeners(db, username, function(err, root) {
+			// console.dir(getListeners(username,root));
+			// mongo.close();
+			db.collection("news", function(err, collection) {
+				if (err) {
+					mongo.close();
+					return callback(err);
+				}
+				//{'listeners':{"$in": ['10000001']}}
+				collection.find({}, {
+					'pid': 1,
+					'id': 1,
+					'_id': 0,
+					'name': 1
+				}).toArray(function(err, groups) {
+					if (err) {
+						mongo.close();
+						return callback(err);
+					}
+					ep.emit('groups', groups);
+				});
+			});
+			callback(null, getListeners(username, root));
+		});
+	});
+};
+
+function getListeners(username, root) {
+	var listeners = [],
+		name = username,
+		isFind = false;
+	// arguments.callee
+	(function(root) {
+		var i = 0,
+			list = root.subGroup;
+		if (root.name === name) {
+			isFind = true;
+			listeners.push(root.id);
+			return;
+		}
+		if (list.length === 0) {
+			return;
+		} else {
+			for (i = 0; i < list.length; i++) {
+				arguments.callee(list[i]);
+			}
+			if (isFind) {
+				listeners.push(root.id);
+			}
+		}
+	})(root);
+	return listeners;
+}
