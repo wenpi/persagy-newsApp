@@ -71,7 +71,7 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get('/news/:id', function(req, res) {
+	app.get('/newsText/:id', function(req, res) {
 		News.getRichText(req.params.id, function(err, text) {
 			if (err) {
 				text = '操作异常';
@@ -83,14 +83,86 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get('/getNewsByDay', function(req, res) {
-		News.getByDay('lee', '2013-11-14', function(err, doc) {
-			// if (err) {
-			//	text = '操作异常';
-			// }
-			res.send(doc);
+	app.post('/news', function(req, res) {
+		News.getNews(req.body.id, function(err, doc) {
+			var result = {
+				msg: null,
+				code: '0000',
+				intertype: 'typeRequest',
+				data: []
+			};
+			if (err) {
+				result.msg = err;
+				result.code = null;
+			} else {
+				result.data = doc;
+			}
+			res.send(result);
 		});
+	});
 
+	app.post('/getNewsByDay', function(req, res) {
+		News.getByDay(req.body.username, req.body.date, function(err, doc) {
+			var i = 0,
+				result = {
+					msg: null,
+					code: '0000',
+					intertype: 'dayRequest',
+					data: []
+				};
+
+			if (err) {
+				result.msg = err;
+				result.code = null;
+			} else {
+				if (doc && doc.length !== 0) {
+					for (i = 0; i < doc.length; i++) {
+						doc[i].textadd = '/newsText/' + doc[i]._id;
+					}
+				} else {
+					doc = [];
+				}
+				result.data = doc;
+			}
+			console.dir(doc);
+			res.send(result);
+		});
+	});
+	// News.getListByMonth
+	app.post('/getNewsListByMonth', function(req, res) {
+		News.getListByMonth(req.body.username, req.body.date, function(err, doc) {
+			var result = {
+				msg: null,
+				code: '0000',
+				intertype: 'monthRequest',
+				data: []
+			};
+			if (err) {
+				result.msg = err;
+				result.code = null;
+			} else {
+				result.data = doc;
+			}
+			res.send(result);
+		});
+	});
+
+	app.post('/getNewsExistByMonth', function(req, res) {
+		News.getExistByMonth(req.body.username, req.body.date, function(err, doc) {
+			var result = {
+				msg: null,
+				code: '0000',
+				intertype: 'monthRequest',
+				data: []
+			};
+			if (err) {
+				result.msg = err;
+				result.code = null;
+			} else {
+				result.data = doc;
+			}
+			res.send(result);
+		});
 	});
 
 	app.post('/login', function(req, res) {
