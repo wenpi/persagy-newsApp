@@ -95,6 +95,7 @@ module.exports = function(app) {
 				result.msg = err;
 				result.code = null;
 			} else {
+				doc.textadd = '/newsText/' + doc._id;
 				result.data = doc;
 			}
 			res.send(result);
@@ -102,7 +103,7 @@ module.exports = function(app) {
 	});
 
 	app.post('/getNewsByDay', function(req, res) {
-		News.getByDay(req.body.username, req.body.date, function(err, doc) {
+		News.getByDay(req.body.username, req.body.date, null, function(err, doc) {
 			var i = 0,
 				result = {
 					msg: null,
@@ -118,6 +119,7 @@ module.exports = function(app) {
 				if (doc && doc.length !== 0) {
 					for (i = 0; i < doc.length; i++) {
 						doc[i].textadd = '/newsText/' + doc[i]._id;
+						doc[i].date = doc[i].day;
 					}
 				} else {
 					doc = [];
@@ -230,4 +232,6 @@ module.exports = function(app) {
 			}
 		});
 	});
+
+	// app.post()
 };

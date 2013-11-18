@@ -55,20 +55,20 @@ News.prototype.save = function(callback) {
 			isDel: this.isDel,
 			isPub: isPub
 		};
-	mongo.open(function(err, db) {
+	mongo.openCheck(function(err, db) {
 		if (err) {
 			return callback(err);
 		}
 
 		db.collection("news", function(err, collection) {
 			if (err) {
-				mongo.close();
+
 				return callback(err);
 			}
 			collection.insert(post, {
 				safe: true
 			}, function(err) {
-				mongo.close();
+
 				if (err) {
 					return callback(err);
 				}
@@ -79,13 +79,13 @@ News.prototype.save = function(callback) {
 };
 
 News.getList = function(isPub, callback) {
-	mongo.open(function(err, db) {
+	mongo.openCheck(function(err, db) {
 		if (err) {
 			return callback(err);
 		}
 		db.collection("news", function(err, collection) {
 			if (err) {
-				mongo.close();
+
 				return callback(err);
 			}
 			var query = {
@@ -95,7 +95,7 @@ News.getList = function(isPub, callback) {
 			collection.find(query).sort({
 				date: -1
 			}).toArray(function(err, docs) {
-				mongo.close();
+
 				if (err) {
 					return callback(err);
 				}
@@ -109,18 +109,18 @@ News.get = function(id, callback) {
 	var ep;
 	if (id) {
 		ep = EventProxy.create("news", "groups", function(news, groups) {
-			mongo.close();
+
 			console.dir(news);
 			console.dir(groups);
 			callback(null, news, groups);
 		});
-		mongo.open(function(err, db) {
+		mongo.openCheck(function(err, db) {
 			if (err) {
 				return callback(err);
 			}
 			db.collection("news", function(err, collection) {
 				if (err) {
-					mongo.close();
+
 					return callback(err);
 				}
 				collection.findOne({
@@ -134,18 +134,19 @@ News.get = function(id, callback) {
 			});
 			Group.get(db, function(err, groups) {
 				if (err) {
+
 					return callback(err);
 				}
 				ep.emit("groups", groups);
 			});
 		});
 	} else {
-		mongo.open(function(err, db) {
+		mongo.openCheck(function(err, db) {
 			if (err) {
 				return callback(err);
 			}
 			Group.get(db, function(err, groups) {
-				mongo.close();
+
 				if (err) {
 					return callback(err);
 				}
@@ -159,13 +160,13 @@ News.get = function(id, callback) {
 
 News.getNews = function(id, callback) {
 	if (id && id.length === 24) {
-		mongo.open(function(err, db) {
+		mongo.openCheck(function(err, db) {
 			if (err) {
 				return callback(err);
 			}
 			db.collection("news", function(err, collection) {
 				if (err) {
-					mongo.close();
+
 					return callback(err);
 				}
 				collection.findOne({
@@ -179,7 +180,7 @@ News.getNews = function(id, callback) {
 					subtitle: 1,
 					text: 1
 				}, function(err, doc) {
-					mongo.close();
+
 					if (err) {
 						return callback(err);
 					}
@@ -194,13 +195,13 @@ News.getNews = function(id, callback) {
 
 News.getRichText = function(id, callback) {
 	if (id && id.length === 24) {
-		mongo.open(function(err, db) {
+		mongo.openCheck(function(err, db) {
 			if (err) {
 				return callback(err);
 			}
 			db.collection("news", function(err, collection) {
 				if (err) {
-					mongo.close();
+
 					return callback(err);
 				}
 				collection.findOne({
@@ -209,7 +210,7 @@ News.getRichText = function(id, callback) {
 					richText: 1,
 					_id: 0
 				}, function(err, doc) {
-					mongo.close();
+
 					if (err) {
 						return callback(err);
 					}
@@ -227,57 +228,55 @@ News.getRichText = function(id, callback) {
 	}
 };
 
-News.getByDay = function(username, date, callback) {
-	mongo.open(function(err, db) {
+News.getByDay = function(username, date, auto, callback) {
+	mongo.openCheck(function(err, db) {
 		if (err) {
 			return callback(err);
 		}
 		Group.getListeners(db, username, function(err, root) {
-			// console.dir(getListeners(username,root));
-			// mongo.close();
-			db.collection("news", function(err, collection) {
-				if (err) {
-					mongo.close();
-					return callback(err);
-				}
-				//{'listeners':{"$in": ['10000001']}}
-				collection.find({
-					'listeners': {
-						"$in": getListeners(username, root)
-					},
-					'day': date
-				}, {
-					_id: 1,
-					sign: 1,
-					title: 1,
-					titlecolor: 1,
-					unit: 1,
-					subtitle: 1,
-					text: 1
-				}).toArray(function(err, news) {
-					mongo.close();
+			if (auto === null) {
+				db.collection("news", function(err, collection) {
 					if (err) {
 						return callback(err);
 					}
-					callback(null, news);
+					//{'listeners':{"$in": ['10000001']}}
+					collection.find({
+						'listeners': {
+							"$in": getListeners(username, root)
+						},
+						'day': date
+					}, {
+						_id: 1,
+						sign: 1,
+						title: 1,
+						titlecolor: 1,
+						unit: 1,
+						subtitle: 1,
+						text: 1,
+						day: 1
+					}).toArray(function(err, news) {
+						if (err) {
+							return callback(err);
+						}
+						callback(null, news);
+					});
 				});
-			});
-
+			}
 		});
 	});
 };
 
 News.getListByMonth = function(username, date, callback) {
-	mongo.open(function(err, db) {
+	mongo.openCheck(function(err, db) {
 		if (err) {
 			return callback(err);
 		}
 		Group.getListeners(db, username, function(err, root) {
 			// console.dir(getListeners(username,root));
-			// mongo.close();
+			// 
 			db.collection("news", function(err, collection) {
 				if (err) {
-					mongo.close();
+
 					return callback(err);
 				}
 				//{'listeners':{"$in": ['10000001']}}
@@ -293,7 +292,7 @@ News.getListByMonth = function(username, date, callback) {
 					unit: 1,
 					subtitle: 1
 				}).toArray(function(err, news) {
-					mongo.close();
+
 					if (err) {
 						return callback(err);
 					}
@@ -305,16 +304,16 @@ News.getListByMonth = function(username, date, callback) {
 };
 
 News.getExistByMonth = function(username, date, callback) {
-	mongo.open(function(err, db) {
+	mongo.openCheck(function(err, db) {
 		if (err) {
 			return callback(err);
 		}
 		Group.getListeners(db, username, function(err, root) {
 			// console.dir(getListeners(username,root));
-			// mongo.close();
+			// 
 			db.collection("news", function(err, collection) {
 				if (err) {
-					mongo.close();
+
 					return callback(err);
 				}
 				//{'listeners':{"$in": ['10000001']}}
@@ -327,7 +326,7 @@ News.getExistByMonth = function(username, date, callback) {
 					_id: 0,
 					day: 1
 				}).toArray(function(err, news) {
-					mongo.close();
+
 					if (err) {
 						return callback(err);
 					}
@@ -340,7 +339,7 @@ News.getExistByMonth = function(username, date, callback) {
 					}
 					for (i = 0; i < news.length; i++) {
 						day = news[i].day.slice(-2) - 1;
-						arr[day]=true;
+						arr[day] = true;
 					}
 					callback(null, arr);
 				});

@@ -17,7 +17,7 @@ Group.get = function(db, callback) {
 	});
 	db.collection("groups", function(err, collection) {
 		if (err) {
-			mongo.close();
+			
 			return callback(err);
 		}
 		collection.find({}, {
@@ -27,7 +27,7 @@ Group.get = function(db, callback) {
 			'name': 1
 		}).toArray(function(err, groups) {
 			if (err) {
-				mongo.close();
+				
 				return callback(err);
 			}
 			ep.emit('groups', groups);
@@ -35,7 +35,7 @@ Group.get = function(db, callback) {
 	});
 	db.collection("users", function(err, collection) {
 		if (err) {
-			mongo.close();
+			
 			return callback(err);
 		}
 		collection.find({}, {
@@ -45,7 +45,7 @@ Group.get = function(db, callback) {
 			'_id': 0
 		}).toArray(function(err, users) {
 			if (err) {
-				mongo.close();
+				
 				return callback(err);
 			}
 			ep.emit('users', users);
@@ -59,7 +59,7 @@ Group.getListeners = function(db, name, callback) {
 	});
 	db.collection("groups", function(err, collection) {
 		if (err) {
-			mongo.close();
+			
 			return callback(err);
 		}
 		collection.find({}, {
@@ -69,7 +69,7 @@ Group.getListeners = function(db, name, callback) {
 			'name': 1
 		}).toArray(function(err, groups) {
 			if (err) {
-				mongo.close();
+				
 				return callback(err);
 			}
 			ep.emit('groups', groups);
@@ -77,7 +77,7 @@ Group.getListeners = function(db, name, callback) {
 	});
 	db.collection("users", function(err, collection) {
 		if (err) {
-			mongo.close();
+			
 			return callback(err);
 		}
 		collection.findOne({
@@ -89,7 +89,7 @@ Group.getListeners = function(db, name, callback) {
 			'_id': 0
 		}, function(err, users) {
 			if (err) {
-				mongo.close();
+				
 				return callback(err);
 			}
 			ep.emit('users', users);

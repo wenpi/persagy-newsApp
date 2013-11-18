@@ -12,19 +12,19 @@ module.exports = User;
 
 
 User.get = function(name, callback) {
-	mongo.open(function(error, db) {
+	mongo.openCheck(function(error, db) {
 		if (error) {
 			return callback(error);
 		}
 		db.collection('users', function(error, collection) {
 			if (error) {
-				mongo.close();
+				
 				return callback(error);
 			}
 			collection.findOne({
 				username: name
 			}, function(error, user) {
-				mongo.close();
+				
 				if (error) {
 					return callback(error);
 				}
@@ -35,13 +35,13 @@ User.get = function(name, callback) {
 };
 
 User.changePassword = function(name, pwd, callback) {
-	mongo.open(function(error, db) {
+	mongo.openCheck(function(error, db) {
 		if (error) {
 			return callback(error);
 		}
 		db.collection('users', function(error, collection) {
 			if (error) {
-				mongo.close();
+				
 				return callback(error);
 			}
 			collection.update({
@@ -51,7 +51,7 @@ User.changePassword = function(name, pwd, callback) {
 					userpwd: pwd
 				}
 			}, function(err) {
-				mongo.close();
+				
 				if (err) {
 					return callback(err);
 				}
