@@ -1,0 +1,250 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"fun",
+				"function"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 81.0,
+		"selected_items":
+		[
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 464.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/D/SVN/mmqx/1/weibo/config.php",
+		"/D/SVN/mmqx/1/weibo/callback.php",
+		"/D/SVN/mmqx/1/weibo/weibolist.php",
+		"/D/SVN/mmqx/1/weibo/saetv2.ex.class.php",
+		"/D/SVN/mmqx/1/weibo/index.php",
+		"/D/SVN/mmqx/1/weibo/weibo_login.png",
+		"/D/SVN/mmqx/1/weiboold/config.php",
+		"/D/SVN/mmqx/1/weiboold/weibooauth.php",
+		"/D/SVN/mmqx/1/weiboold/index.php",
+		"/D/SVN/mmqx/1/weiboold/callback.php",
+		"/D/SVN/mmqx/1/weiboold/weibolist.php",
+		"/D/phpStudy/WWW/weibo/config.php",
+		"/D/phpStudy/WWW/weibo/saetv2.ex.class.php",
+		"/D/phpStudy/WWW/weibo/weibolist.php",
+		"/D/phpStudy/WWW/weibo/callback.php",
+		"/D/phpStudy/WWW/weibo/index.php",
+		"/C/Windows/System32/drivers/etc/networks",
+		"/D/phpStudy/WWW/weiboold/.DS_Store",
+		"/D/phpStudy/WWW/weiboold/index.php",
+		"/D/phpStudy/WWW/weiboold/callback.php",
+		"/D/phpStudy/WWW/weiboold/config.php",
+		"/D/phpStudy/WWW/weiboold/weibolist.php",
+		"/D/phpStudy/WWW/weiboold/weibooauth.php",
+		"/D/phpStudy/WWW/callback.php",
+		"/D/phpStudy/WWW/phpinfo.php",
+		"/D/phpStudy/WWW/index.php",
+		"/D/phpStudy/WWW/config.php",
+		"/D/phpStudy/WWW/weibolist.php",
+		"/D/phpStudy/WWW/weibooauth.php",
+		"/D/phpStudy/WWW/l.php",
+		"/D/phpStudy/WWW/weibo/weibooauth.php",
+		"/D/GitHub/persagy-newsApp/dist/app.js",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/Preferences.sublime-settings",
+		"/D/GitHub/persagy-newsApp/dist/views/edit.ejs",
+		"/D/GitHub/persagy-newsApp/dist/models/news.js",
+		"/D/GitHub/persagy-newsApp/dist/routes/index.js",
+		"/D/GitHub/persagy-newsApp/dist/models/db.js",
+		"/D/GitHub/persagy-newsApp/dist/public/test.html",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/HTML.sublime-settings",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/JavaScript.sublime-settings",
+		"/E/persagy/SVN/WandaHotel/SingleBuildingCompareApp/SingleBuildingCompareApp/Content/BuildingCompare_analysis.css",
+		"/E/persagy/SVN/WandaHotel/SingleBuildingCompareApp/SingleBuildingCompareApp/Scripts/BuildingCompareVM.js",
+		"/E/persagy/SVN/WandaHotel/SingleBuildingCompareApp/SingleBuildingCompareApp/Scripts/BuildingCompareApp.js",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/JsFormat/Default (Windows).sublime-keymap",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/JsFormat/JsFormat.sublime-settings",
+		"/D/GitHub/nodeclub/controllers/user.js",
+		"/D/GitHub/nodeclub/app.js",
+		"/D/GitHub/persagy-newsApp/dist/models/groups.js",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/Package Control.last-run",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/Package Control.sublime-settings",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/BracketHighlighter/bh_core.sublime-settings",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/bh_core.sublime-settings",
+		"/D/Dropbox/Software/Sublime Text 2.0.2 x64/Data/Packages/Color Scheme - Default/Monokai.tmTheme",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Installed Packages/BracketHighlighter.sublime-package",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Cache/Theme - Default/Widgets.stTheme.cache",
+		"/D/Dropbox/Software/Sublime Text 3/Data/KEEPME",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/JsFormat.sublime-settings",
+		"/D/Dropbox/Software/Sublime Text 2.0.2 x64/Data/Packages/JsFormat/JsFormat.sublime-settings",
+		"/D/Dropbox/Software/Sublime Text 2.0.2 x64/Data/Packages/BracketHighlighter/Default.sublime-keymap",
+		"/D/Dropbox/Software/Sublime Text 2.0.2 x64/Data/Settings/Session.sublime_session"
+	],
+	"find":
+	{
+		"height": 36.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"oauth",
+			"OAuthConsumer",
+			"home_timeline",
+			"$_SERVER['SCRIPT_URI']",
+			"verify_credentials",
+			"_SERVER",
+			"SCRIPT_URI",
+			"_SERVER",
+			"temp",
+			"news",
+			"find",
+			"findone"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 28.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.unsaved_changes":
+	{
+		"height": 124.0
+	},
+	"project": "newsApp.sublime-project",
+	"replace":
+	{
+		"height": 52.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

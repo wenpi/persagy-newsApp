@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>test</title>
+  <script src="js/jquery-2.0.3.js"></script>
+  <script type="text/javascript">
+      $(function() {
+        $('#test').click(function(){
+          $.ajax({
+            url:'/getNewsByDay',
+            type:'post',
+            dataType :'json',
+            data:{
+              username:'lee',
+              date:'2013-11-14',
+              auto:'right'
+            },
+            success:function(data){
+              console.dir(data);
+            }
+          }).done(function() {
+          });
+        });
+      });
+  </script>
+</head>
+<body>
+  <input type="button" class="btn btn-primary" value="test" id="test">
+</body>
+</html>

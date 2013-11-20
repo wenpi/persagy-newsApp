@@ -103,7 +103,7 @@ module.exports = function(app) {
 	});
 
 	app.post('/getNewsByDay', function(req, res) {
-		News.getByDay(req.body.username, req.body.date, null, function(err, doc) {
+		News.getByDay(req.body.username, req.body.date, req.body.auto, function(err, doc) {
 			var i = 0,
 				result = {
 					msg: null,
