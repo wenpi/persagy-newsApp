@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"ev",
+				"EventProxy"
+			],
+			[
+				"for",
+				"for	for (…) {…}"
+			],
+			[
+				"res",
+				"result"
+			],
+			[
 				"li",
 				"listenners"
 			],
@@ -23,15 +35,36 @@
 			"file": "dist/models/news.js",
 			"settings":
 			{
-				"buffer_size": 10009,
+				"buffer_size": 9780,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "var mongo = require('./db');\nvar User = require('./users');\nvar EventProxy = require('eventproxy');\n\nfunction Group() {\n	this.id = '';\n	this.pid = '';\n	this.name = '';\n	this.subGroup = [];\n}\n\nmodule.exports = Group;\n\nGroup.get = function(db, callback) {\n	var ep = EventProxy.create(\"groups\", \"users\", function(groups, users) {\n		callback(null, treeFactory(groups.concat(users)));\n	});\n	db.collection(\"groups\", function(err, collection) {\n		if (err) {\n			\n			return callback(err);\n		}\n		collection.find({}, {\n			'pid': 1,\n			'id': 1,\n			'_id': 0,\n			'name': 1\n		}).toArray(function(err, groups) {\n			if (err) {\n				\n				return callback(err);\n			}\n			ep.emit('groups', groups);\n		});\n	});\n	db.collection(\"users\", function(err, collection) {\n		if (err) {\n			\n			return callback(err);\n		}\n		collection.find({}, {\n			'pid': 1,\n			'showname': 1,\n			'id': 1,\n			'_id': 0\n		}).toArray(function(err, users) {\n			if (err) {\n				\n				return callback(err);\n			}\n			ep.emit('users', users);\n		});\n	});\n};\n\nGroup.getListeners = function(db, name, callback) {\n	var ep = EventProxy.create(\"groups\", \"users\", function(groups, users) {\n		callback(null, treeFactory(groups.concat(users)));\n	});\n	db.collection(\"groups\", function(err, collection) {\n		if (err) {\n			\n			return callback(err);\n		}\n		collection.find({}, {\n			'pid': 1,\n			'id': 1,\n			'_id': 0,\n			'name': 1\n		}).toArray(function(err, groups) {\n			if (err) {\n				\n				return callback(err);\n			}\n			ep.emit('groups', groups);\n		});\n	});\n	db.collection(\"users\", function(err, collection) {\n		if (err) {\n			\n			return callback(err);\n		}\n		collection.findOne({\n			'username': name\n		}, {\n			'pid': 1,\n			'username': 1,\n			'id': 1,\n			'_id': 0\n		}, function(err, users) {\n			if (err) {\n				\n				return callback(err);\n			}\n			ep.emit('users', users);\n		});\n	});\n};\n\nfunction treeFactory(list) {\n	var i,\n		root = new Group();\n	for (i = 0; i < list.length; i++) {\n		if (list[i].pid === null) {\n			root.id = list[i].id;\n			root.name = list[i].name;\n		}\n		break;\n	}\n	root.subGroup = findSubNode(root, list);\n	return root;\n}\n\n\nfunction findSubNode(root, list) {\n	var i,\n		subList = [],\n		id,\n		name,\n		tempNode;\n	for (i = 0; i < list.length; i++) {\n		name = list[i].showname || list[i].username || list[i].name;\n		if (root.id === list[i].pid) {\n			tempNode = new Group();\n			tempNode.id = list[i].id;\n			tempNode.name = name;\n			tempNode.pid = list[i].pid;\n			subList.push(tempNode);\n		}\n	}\n	if (subList.length !== 0) {\n		for (i = 0; i < subList.length; i++) {\n			subList[i].subGroup = findSubNode(subList[i], list);\n		}\n	}\n	return subList;\n}",
+			"file": "dist/views/edit.ejs",
+			"settings":
+			{
+				"buffer_size": 5946,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "dist/routes/index.js",
+			"settings":
+			{
+				"buffer_size": 5067,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "dist/models/users.js",
+			"settings":
+			{
+				"buffer_size": 1085,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "dist/models/groups.js",
-			"file_size": 2709,
-			"file_write_time": 130292336034130303,
 			"settings":
 			{
 				"buffer_size": 2573,
@@ -43,22 +76,6 @@
 			"settings":
 			{
 				"buffer_size": 30,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "dist/routes/index.js",
-			"settings":
-			{
-				"buffer_size": 5210,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "dist/views/edit.ejs",
-			"settings":
-			{
-				"buffer_size": 5725,
 				"line_ending": "Windows"
 			}
 		},
@@ -136,6 +153,7 @@
 	},
 	"file_history":
 	[
+		"/D/GitHub/persagy-newsApp/dist/views/edit.ejs",
 		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/JsFormat/JsFormat.sublime-settings",
 		"/D/GitHub/nodeclub/views/topic/index.html",
 		"/D/GitHub/nodeclub/views/topic/abstract.html",
@@ -185,7 +203,6 @@
 		"/D/phpStudy/WWW/weibo/weibooauth.php",
 		"/D/GitHub/persagy-newsApp/dist/app.js",
 		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/Preferences.sublime-settings",
-		"/D/GitHub/persagy-newsApp/dist/views/edit.ejs",
 		"/D/GitHub/persagy-newsApp/dist/models/news.js",
 		"/D/GitHub/persagy-newsApp/dist/routes/index.js",
 		"/D/GitHub/persagy-newsApp/dist/models/db.js",
@@ -226,6 +243,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"req.query.id",
+			"startDate",
+			"findOne",
 			"date-id",
 			"value",
 			"listeners",
@@ -277,7 +297,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -286,44 +306,100 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10009,
+						"buffer_size": 9780,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5161,
-								5168
+								1426,
+								1426
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4424.0,
+						"translation.y": 795.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "dist/models/groups.js",
+					"file": "dist/views/edit.ejs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2573,
+						"buffer_size": 5946,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								645,
-								645
+								5553,
+								5553
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2011.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "dist/routes/index.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5067,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1374,
+								1374
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 856.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "dist/models/users.js",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1085,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								449,
+								449
 							]
 						],
 						"settings":
@@ -338,7 +414,35 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 4,
+					"file": "dist/models/groups.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2573,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								983,
+								983
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 324.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
 					"file": "/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/JsFormat.sublime-settings",
 					"semi_transient": false,
 					"settings":
@@ -367,63 +471,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "dist/routes/index.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5210,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4627,
-								4627
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 3886.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "dist/views/edit.ejs",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5725,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2359,
-								2359
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 784.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
+					"buffer": 6,
 					"file": "/D/GitHub/nodeclub/views/topic/list.html",
 					"semi_transient": false,
 					"settings":
@@ -451,7 +499,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 7,
 					"file": "dist/views/header.ejs",
 					"semi_transient": false,
 					"settings":
@@ -480,7 +528,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "dist/public/css/tree.css",
 					"semi_transient": false,
 					"settings":

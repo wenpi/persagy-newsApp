@@ -43,6 +43,7 @@ module.exports = function(app) {
 				name: 'edit',
 				news: news,
 				groups: groups,
+				id: req.query.id,
 				error: req.flash('error').toString(),
 				success: req.flash('success').toString()
 			});
@@ -62,12 +63,11 @@ module.exports = function(app) {
 				richText: body.richText,
 				date: body.date
 			});
-		console.dir(body);
-		news.save(function(err) {
+		news.save(body.id, function(err) {
 			if (err) {
-				req.flash('error', '发布失败!');
+				req.flash('error', body.id ? '编辑失败' : '发布失败!');
 			} else {
-				req.flash('success', '发布成功!');
+				req.flash('success', body.id ? '编辑失败' : '发布成功!');
 			}
 			res.redirect('/edit'); //注册成功后返回主页
 		});
@@ -170,20 +170,32 @@ module.exports = function(app) {
 	});
 
 	app.post('/login', function(req, res) {
-		User.get(req.body.username, function(err, user) {
-			// var md5 = crypto.createHash('md5'),
-			//     password = md5.update(req.body.password).digest('hex');
-			console.dir(req.body);
-			console.log('username:', req.body.username);
-			console.log('password:', req.body.password);
+		var result = {
+			msg: null,
+			code: '0000',
+			successful: true,
+			message: null,
+			intertype: 'landing'
+		};
+		var ep = new EventProxy();
+		ep.on("user", function(result) {
+			if (result.successful) {
+				News.getStartDate(req.body.username, function(err, doc) {
+					if (err) {
+						result.msg = err;
+						result.code = null;
+					} else {
+						result.startDate = doc.startDate;
+						result.endDate = doc.endDate;
+					}
+					res.send(result);
+				});
+			} else {
+				res.send(result);
+			}
+		});
 
-			var result = {
-				msg: null,
-				code: '0000',
-				successful: true,
-				message: null,
-				intertype: 'landing'
-			};
+		User.get(req.body.username, function(err, user) {
 			if (err) {
 				result.msg = err;
 				result.code = null;
@@ -196,21 +208,12 @@ module.exports = function(app) {
 			} else {
 				result.successful = true;
 			}
-			res.send(result);
+			ep.emit('user', result);
 		});
 	});
 
 	app.post('/password', function(req, res) {
 		User.get(req.body.username, function(err, user) {
-			// var md5 = crypto.createHash('md5'),
-			//     password = md5.update(req.body.password).digest('hex');
-			// console.dir(req.body);
-			// console.log('username:', req.body.username);
-			// console.log('oldPassword:', req.body.oldPassword);
-			var ep = new EventProxy();
-			ep.on('firstDate',function(data){
-
-			});
 			var result = {
 				msg: null,
 				code: '0000',

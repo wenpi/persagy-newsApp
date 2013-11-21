@@ -8,6 +8,7 @@
 		<%= error %></div>
 		<% } %>
 		<form class="form-horizontal" role="form" action="edit" method="post">
+			<textarea style="display:none" name="id"><%- id %></textarea>
 			<div class="form-group">
 				<label for="inputTitle" class="col-sm-2 control-label">数据</label>
 				<div class="col-sm-4">
@@ -116,23 +117,34 @@
 				});
 				$('.check-listenners').on('click',function(){
 					var $this= $(this);
-					var id=$this.data('id');
+					var id=$this.data('id')+'';
+					console.log(id)
 					var $listenners=$('#listenners');
 					var text=$listenners.val();
+					var texts=text.length===0?[]:text.split(',');
+					var isFind=false;
+					for (var i = 0; i < texts.length; i++) {
+						if(texts[i]==id){
+							isFind=true;
+							break;
+						}
+					};
 					if(this.checked){
-						if(text.indexOf(id)<0){
-							text+=text.length>0?(','+id):id;
+						if(!isFind){
+							texts.push(id);
 						}
 					}else{
-						if(text.indexOf(id)>=0){
-							text.replace(id,'');
-							text.replace(',,',',');
-							if(text[text.length-1]===','){
-								text=text.slice(0,-1);
-							}
+						if(isFind){
+							for (var i = 0; i < texts.length; i++) {
+								console.log(texts[i]);
+								if(texts[i]===id){
+									texts.splice(i,1);
+									break;
+								}
+							};
 						}
 					}
-					$listenners.val(text);
+					$listenners.val(texts.join(','));
 				});
 			};
 		</script>
