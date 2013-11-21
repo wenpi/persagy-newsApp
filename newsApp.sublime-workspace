@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"li",
+				"listenners"
+			],
+			[
+				"ti",
+				"titlecolor"
+			],
+			[
 				"fun",
 				"function"
 			]
@@ -11,6 +19,74 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "dist/models/news.js",
+			"settings":
+			{
+				"buffer_size": 10009,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "var mongo = require('./db');\nvar User = require('./users');\nvar EventProxy = require('eventproxy');\n\nfunction Group() {\n	this.id = '';\n	this.pid = '';\n	this.name = '';\n	this.subGroup = [];\n}\n\nmodule.exports = Group;\n\nGroup.get = function(db, callback) {\n	var ep = EventProxy.create(\"groups\", \"users\", function(groups, users) {\n		callback(null, treeFactory(groups.concat(users)));\n	});\n	db.collection(\"groups\", function(err, collection) {\n		if (err) {\n			\n			return callback(err);\n		}\n		collection.find({}, {\n			'pid': 1,\n			'id': 1,\n			'_id': 0,\n			'name': 1\n		}).toArray(function(err, groups) {\n			if (err) {\n				\n				return callback(err);\n			}\n			ep.emit('groups', groups);\n		});\n	});\n	db.collection(\"users\", function(err, collection) {\n		if (err) {\n			\n			return callback(err);\n		}\n		collection.find({}, {\n			'pid': 1,\n			'showname': 1,\n			'id': 1,\n			'_id': 0\n		}).toArray(function(err, users) {\n			if (err) {\n				\n				return callback(err);\n			}\n			ep.emit('users', users);\n		});\n	});\n};\n\nGroup.getListeners = function(db, name, callback) {\n	var ep = EventProxy.create(\"groups\", \"users\", function(groups, users) {\n		callback(null, treeFactory(groups.concat(users)));\n	});\n	db.collection(\"groups\", function(err, collection) {\n		if (err) {\n			\n			return callback(err);\n		}\n		collection.find({}, {\n			'pid': 1,\n			'id': 1,\n			'_id': 0,\n			'name': 1\n		}).toArray(function(err, groups) {\n			if (err) {\n				\n				return callback(err);\n			}\n			ep.emit('groups', groups);\n		});\n	});\n	db.collection(\"users\", function(err, collection) {\n		if (err) {\n			\n			return callback(err);\n		}\n		collection.findOne({\n			'username': name\n		}, {\n			'pid': 1,\n			'username': 1,\n			'id': 1,\n			'_id': 0\n		}, function(err, users) {\n			if (err) {\n				\n				return callback(err);\n			}\n			ep.emit('users', users);\n		});\n	});\n};\n\nfunction treeFactory(list) {\n	var i,\n		root = new Group();\n	for (i = 0; i < list.length; i++) {\n		if (list[i].pid === null) {\n			root.id = list[i].id;\n			root.name = list[i].name;\n		}\n		break;\n	}\n	root.subGroup = findSubNode(root, list);\n	return root;\n}\n\n\nfunction findSubNode(root, list) {\n	var i,\n		subList = [],\n		id,\n		name,\n		tempNode;\n	for (i = 0; i < list.length; i++) {\n		name = list[i].showname || list[i].username || list[i].name;\n		if (root.id === list[i].pid) {\n			tempNode = new Group();\n			tempNode.id = list[i].id;\n			tempNode.name = name;\n			tempNode.pid = list[i].pid;\n			subList.push(tempNode);\n		}\n	}\n	if (subList.length !== 0) {\n		for (i = 0; i < subList.length; i++) {\n			subList[i].subGroup = findSubNode(subList[i], list);\n		}\n	}\n	return subList;\n}",
+			"file": "dist/models/groups.js",
+			"file_size": 2709,
+			"file_write_time": 130292336034130303,
+			"settings":
+			{
+				"buffer_size": 2573,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/JsFormat.sublime-settings",
+			"settings":
+			{
+				"buffer_size": 30,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "dist/routes/index.js",
+			"settings":
+			{
+				"buffer_size": 5210,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "dist/views/edit.ejs",
+			"settings":
+			{
+				"buffer_size": 5725,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/GitHub/nodeclub/views/topic/list.html",
+			"settings":
+			{
+				"buffer_size": 1413,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "dist/views/header.ejs",
+			"settings":
+			{
+				"buffer_size": 1928,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "dist/public/css/tree.css",
+			"settings":
+			{
+				"buffer_size": 1292,
+				"line_ending": "Windows",
+				"name": ".tree {"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -43,9 +119,10 @@
 	},
 	"console":
 	{
-		"height": 0.0,
+		"height": 160.0,
 		"history":
 		[
+			"bh_toggle_enable"
 		]
 	},
 	"distraction_free":
@@ -59,6 +136,22 @@
 	},
 	"file_history":
 	[
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/JsFormat/JsFormat.sublime-settings",
+		"/D/GitHub/nodeclub/views/topic/index.html",
+		"/D/GitHub/nodeclub/views/topic/abstract.html",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/Default (Windows).sublime-keymap",
+		"/E/persagy/SVN/WandaHotel/SingleBuildingCompareApp/SingleBuildingCompareApp/Views/SingleBuildingCompare/SingleBuildingCompare.cshtml",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/BracketHighlighter-BH2ST3/Default.sublime-commands",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/BracketHighlighter-BH2ST3/bh_core.sublime-settings",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/BracketHighlighter-BH2ST3/Main.sublime-menu",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/BracketHighlighter-BH2ST3/Example.sublime-keymap",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/BracketHighlighter-BH2ST3/Default.sublime-keymap",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/BracketHighlighter-BH2ST3/bh_swapping.sublime-settings",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/BracketHighlighter-BH2ST3/bh_wrapping.sublime-settings",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/bh_core.sublime-settings",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/BracketHighlighter/bh_core.sublime-settings",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/BracketHighlighter/bh_wrapping.sublime-settings",
+		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/BracketHighlighter/Example.sublime-keymap",
 		"/D/SVN/mmqx/1/weibo/config.php",
 		"/D/SVN/mmqx/1/weibo/callback.php",
 		"/D/SVN/mmqx/1/weibo/weibolist.php",
@@ -103,14 +196,11 @@
 		"/E/persagy/SVN/WandaHotel/SingleBuildingCompareApp/SingleBuildingCompareApp/Scripts/BuildingCompareVM.js",
 		"/E/persagy/SVN/WandaHotel/SingleBuildingCompareApp/SingleBuildingCompareApp/Scripts/BuildingCompareApp.js",
 		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/JsFormat/Default (Windows).sublime-keymap",
-		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/JsFormat/JsFormat.sublime-settings",
 		"/D/GitHub/nodeclub/controllers/user.js",
 		"/D/GitHub/nodeclub/app.js",
 		"/D/GitHub/persagy-newsApp/dist/models/groups.js",
 		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/Package Control.last-run",
 		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/Package Control.sublime-settings",
-		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/BracketHighlighter/bh_core.sublime-settings",
-		"/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/bh_core.sublime-settings",
 		"/D/Dropbox/Software/Sublime Text 2.0.2 x64/Data/Packages/Color Scheme - Default/Monokai.tmTheme",
 		"/D/Dropbox/Software/Sublime Text 3/Data/Installed Packages/BracketHighlighter.sublime-package",
 		"/D/Dropbox/Software/Sublime Text 3/Data/Cache/Theme - Default/Widgets.stTheme.cache",
@@ -136,6 +226,26 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"date-id",
+			"value",
+			"listeners",
+			"input",
+			"<input type=\"checkbox\">",
+			"groups.subGroup[i].subGroup[j]",
+			"groups.subGroup[i]",
+			"i",
+			"for",
+			"<",
+			"icon-plus-sign",
+			"icon-minus-sign",
+			"<a href=\"\">Goes somewhere</a>",
+			"<i class=\"icon-leaf\"></i>",
+			"minus",
+			"icon-minus-sign",
+			"i",
+			"icon-folder-open",
+			"10",
+			"bh_toggle_enable",
 			"oauth",
 			"OAuthConsumer",
 			"home_timeline",
@@ -155,6 +265,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"glyphicon glyphicon-minus",
+			".glyphicon .glyphicon-folder-open"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -165,8 +277,238 @@
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "dist/models/news.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10009,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5161,
+								5168
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4424.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "dist/models/groups.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2573,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								645,
+								645
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/D/Dropbox/Software/Sublime Text 3/Data/Packages/User/JsFormat.sublime-settings",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 30,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2,
+								2
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "dist/routes/index.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5210,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4627,
+								4627
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3886.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "dist/views/edit.ejs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5725,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2359,
+								2359
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 784.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/D/GitHub/nodeclub/views/topic/list.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1413,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								821,
+								592
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "dist/views/header.ejs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1928,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1160,
+								1160
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 365.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "dist/public/css/tree.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1292,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1292,
+								1292
+							]
+						],
+						"settings":
+						{
+							"auto_name": ".tree {",
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 277.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -208,7 +550,7 @@
 	"project": "newsApp.sublime-project",
 	"replace":
 	{
-		"height": 52.0
+		"height": 66.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -221,11 +563,15 @@
 	},
 	"select_project":
 	{
-		"height": 0.0,
+		"height": 500.0,
 		"selected_items":
 		[
+			[
+				"",
+				"E:\\persagy\\SVN\\EMS_WDPD\\WebRoot\\ems_wdpd.sublime-project"
+			]
 		],
-		"width": 0.0
+		"width": 380.0
 	},
 	"select_symbol":
 	{

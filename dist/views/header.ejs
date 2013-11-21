@@ -7,7 +7,10 @@
   <link href="css/bootstrap.css" rel="stylesheet" media="screen">
   <link href="css/style.css" rel="stylesheet" media="screen">
   <link href="ueditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
-
+  <% if(name==='edit'){ %>
+  <link rel="stylesheet" type="text/css" href="css/tree.css">
+  <% } %>
+  
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -49,5 +52,5 @@
         </ul>
       </div>
       <!--/.nav-collapse --> </div>
-  </div>
-  <div class="container">
+    </div>
+    <div class="container">

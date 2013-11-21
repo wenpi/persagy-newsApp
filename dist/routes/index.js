@@ -3,6 +3,7 @@
  */
 var News = require("../models/news.js");
 var User = require('../models/users.js');
+var EventProxy = require('eventproxy');
 
 module.exports = function(app) {
 	app.get('/', function(req, res) {
@@ -53,6 +54,7 @@ module.exports = function(app) {
 			news = new News({
 				sign: body.sign,
 				title: body.title,
+				titlecolor: body.titlecolor,
 				unit: body.unit,
 				subtitle: body.subtitle,
 				listeners: body.listeners,
@@ -154,7 +156,7 @@ module.exports = function(app) {
 			var result = {
 				msg: null,
 				code: '0000',
-				intertype: 'monthRequest',
+				intertype: 'monthBooleanRequest',
 				data: []
 			};
 			if (err) {
@@ -202,10 +204,13 @@ module.exports = function(app) {
 		User.get(req.body.username, function(err, user) {
 			// var md5 = crypto.createHash('md5'),
 			//     password = md5.update(req.body.password).digest('hex');
-			console.dir(req.body);
-			console.log('username:', req.body.username);
-			console.log('oldPassword:', req.body.oldPassword);
+			// console.dir(req.body);
+			// console.log('username:', req.body.username);
+			// console.log('oldPassword:', req.body.oldPassword);
+			var ep = new EventProxy();
+			ep.on('firstDate',function(data){
 
+			});
 			var result = {
 				msg: null,
 				code: '0000',

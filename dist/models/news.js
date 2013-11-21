@@ -44,6 +44,7 @@ News.prototype.save = function(callback) {
     post = {
       sign: this.sign,
       title: this.title,
+      titlecolor: this.titlecolor,
       unit: this.unit,
       subtitle: this.subtitle,
       text: this.text,
@@ -166,7 +167,6 @@ News.getNews = function(id, callback) {
       }
       db.collection("news", function(err, collection) {
         if (err) {
-
           return callback(err);
         }
         collection.findOne({
@@ -178,9 +178,9 @@ News.getNews = function(id, callback) {
           titlecolor: 1,
           unit: 1,
           subtitle: 1,
-          text: 1
+          text: 1,
+          day:1
         }, function(err, doc) {
-
           if (err) {
             return callback(err);
           }
