@@ -30,7 +30,9 @@ module.exports = function(app) {
 			res.render('time', {
 				title: '已发布列表',
 				name: 'time',
-				news: news
+				news: news,
+				error: req.flash('error').toString(),
+				success: req.flash('success').toString()
 			});
 		});
 	});
@@ -261,10 +263,10 @@ module.exports = function(app) {
 
 	app.post('/upload', function(req, res) {
 		// var temp_path=req.files.thumbnail.path;
-		var target_path=req.files.upfile.path;
-		var paths=target_path.split('\\');
+		var target_path = req.files.upfile.path;
+		var paths = target_path.split('\\');
 
 		console.dir(paths);
-		res.send("<script>parent.UM.getEditor('editor').getWidgetCallback('image')('" + paths[paths.length-1] + "','SUCCESS')</script>");
+		res.send("<script>parent.UM.getEditor('editor').getWidgetCallback('image')('" + paths[paths.length - 1] + "','SUCCESS')</script>");
 	});
 };
