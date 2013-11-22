@@ -39,9 +39,15 @@ module.exports = News;
  */
 
 News.prototype.save = function(id, callback) {
-	var time = this.date ? moment(this.date) : moment(),
-		//todo 判断当天
+	var isPub;
+	var time;
+	if (this.date) {
+		time = moment(this.date);
 		isPub = moment().isAfter(time);
+	} else {
+		time = moment();
+		isPub = true;
+	}
 	post = {
 		sign: this.sign,
 		title: this.title,
@@ -82,7 +88,7 @@ News.prototype.save = function(id, callback) {
 						"date": post.date,
 						"month": post.month,
 						"day": post.day,
-						"isPub": isPub
+						"isPub": post.isPub
 					}
 				}, function(err) {
 					if (err) {
@@ -181,6 +187,33 @@ News.get = function(id, callback) {
 	}
 };
 
+News.del = function(id, callback) {
+	if (id) {
+		mongo.openCheck(function(err, db) {
+			if (err) {
+				return callback(err);
+			}
+			db.collection("news", function(err, collection) {
+				if (err) {
+					return callback(err);
+				}
+				collection.update({
+					_id: ObjectID(id)
+				}, {
+					$set: {
+						isDel: true
+					}
+				}, function(err) {
+					if (err) {
+						return callback(err);
+					}
+					callback(null);
+				});
+			});
+		});
+	}
+};
+
 
 News.getNews = function(id, callback) {
 	if (id && id.length === 24) {
@@ -265,10 +298,12 @@ News.getByDay = function(username, date, auto, callback) {
 						return callback(err);
 					}
 					collection.find({
-						'listeners': {
-							"$in": getListeners(username, root)
+						listeners: {
+							$in: getListeners(username, root)
 						},
-						'day': dateStr
+						day: dateStr,
+						isPub: true,
+						isDel: false
 					}, {
 						_id: 1,
 						sign: 1,
@@ -299,7 +334,9 @@ News.getByDay = function(username, date, auto, callback) {
 						},
 						day: {
 							'$lte': date
-						}
+						},
+						isPub: true,
+						isDel: false
 					}, {
 						fields: {
 							_id: 0,
@@ -331,7 +368,9 @@ News.getByDay = function(username, date, auto, callback) {
 						},
 						day: {
 							'$gte': date
-						}
+						},
+						isPub: true,
+						isDel: false
 					}, {
 						fields: {
 							_id: 0,
@@ -339,7 +378,7 @@ News.getByDay = function(username, date, auto, callback) {
 						},
 						limit: 1,
 						sort: {
-							date: -1
+							date: 1
 						}
 					}, function(err, newOne) {
 						if (err) {
@@ -375,7 +414,9 @@ News.getListByMonth = function(username, date, callback) {
 					'listeners': {
 						"$in": getListeners(username, root)
 					},
-					'month': date
+					'month': date,
+					isPub: true,
+					isDel: false
 				}, {
 					_id: 1,
 					sign: 1,
@@ -414,7 +455,9 @@ News.getStartDate = function(username, callback) {
 				collection.findOne({
 					listeners: {
 						'$in': getListeners(username, root)
-					}
+					},
+					isPub: true,
+					isDel: false
 				}, {
 					fields: {
 						_id: 0,
@@ -438,7 +481,9 @@ News.getStartDate = function(username, callback) {
 				collection.findOne({
 					listeners: {
 						'$in': getListeners(username, root)
-					}
+					},
+					isPub: true,
+					isDel: false
 				}, {
 					fields: {
 						_id: 0,
@@ -477,7 +522,9 @@ News.getExistByMonth = function(username, date, callback) {
 					'listeners': {
 						"$in": getListeners(username, root)
 					},
-					'month': date
+					'month': date,
+					isPub: true,
+					isDel: false
 				}, {
 					_id: 0,
 					day: 1
@@ -504,6 +551,35 @@ News.getExistByMonth = function(username, date, callback) {
 	});
 };
 
+News.doAutopublish = function() {
+	mongo.openCheck(function(err, db) {
+		if (err) {
+			console.log('autopublish error');
+		}
+		db.collection("news", function(err, collection) {
+			if (err) {
+				return callback(err);
+			}
+			collection.update({
+				isPub: false,
+				isDel: false,
+				date: {
+					$lte: moment().format("YYYY-MM-DD HH:mm:ss")
+				}
+			}, {
+				$set: {
+					isPub: true
+				}
+			}, {
+				multi: true
+			}, function(err) {
+				if (err) {
+					console.log('autopublish error');
+				}
+			})
+		});
+	});
+}
 
 function getListeners(username, root) {
 	var listeners = [],

@@ -7,12 +7,12 @@ var settings = require('../setting'),
 	});
 
 db.openCheck = function(callback) {
-	if (this._state !== "connected") {
-		this.open(callback);
-	} else if (this._state === 'connecting') {
+	if (this._state === 'connecting') {
 		setTimeout(function() {
 			db.openCheck(callback);
 		}, 500);
+	} else if (this._state !== "connected") {
+		this.open(callback);
 	} else {
 		callback(null, this);
 	}

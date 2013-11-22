@@ -4,6 +4,7 @@
 var News = require("../models/news.js");
 var User = require('../models/users.js');
 var EventProxy = require('eventproxy');
+var fs = require('fs');
 
 module.exports = function(app) {
 	app.get('/', function(req, res) {
@@ -14,7 +15,9 @@ module.exports = function(app) {
 			res.render('published', {
 				title: '已发布列表',
 				name: 'published',
-				news: news
+				news: news,
+				error: req.flash('error').toString(),
+				success: req.flash('success').toString()
 			});
 		});
 	});
@@ -50,6 +53,21 @@ module.exports = function(app) {
 		});
 	});
 
+
+	app.post('/del', function(req, res) {
+		News.del(req.body.id, function(err) {
+			if (err) {
+				req.flash('error', '删除失败!');
+			} else {
+				req.flash('success', '删除成功!');
+			}
+			res.send({
+				success: true
+			});
+		});
+	});
+
+
 	app.post('/edit', function(req, res) {
 		var body = req.body,
 			news = new News({
@@ -67,7 +85,7 @@ module.exports = function(app) {
 			if (err) {
 				req.flash('error', body.id ? '编辑失败' : '发布失败!');
 			} else {
-				req.flash('success', body.id ? '编辑失败' : '发布成功!');
+				req.flash('success', body.id ? '编辑成功' : '发布成功!');
 			}
 			res.redirect('/edit'); //注册成功后返回主页
 		});
@@ -128,7 +146,7 @@ module.exports = function(app) {
 				}
 				result.data = doc;
 			}
-			console.dir(doc);
+			// console.dir(doc);
 			res.send(result);
 		});
 	});
@@ -241,5 +259,12 @@ module.exports = function(app) {
 		});
 	});
 
-	// app.post()
+	app.post('/upload', function(req, res) {
+		// var temp_path=req.files.thumbnail.path;
+		var target_path=req.files.upfile.path;
+		var paths=target_path.split('\\');
+
+		console.dir(paths);
+		res.send("<script>parent.UM.getEditor('editor').getWidgetCallback('image')('" + paths[paths.length-1] + "','SUCCESS')</script>");
+	});
 };

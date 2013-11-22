@@ -5,21 +5,20 @@
   <script src="js/jquery-2.0.3.js"></script>
   <script type="text/javascript">
       $(function() {
-        $('#test').click(function(){
+        $('#test').click(function() {
           $.ajax({
-            url:'/getNewsByDay',
-            type:'post',
-            dataType :'json',
-            data:{
-              username:'lee',
-              date:'2013-11-14',
-              auto:'right'
+            url: '/getNewsByDay',
+            type: 'post',
+            dataType: 'json',
+            data: {
+              username: 'bao',
+              date: '2013-11-20',
+              auto: 'right'
             },
-            success:function(data){
+            success: function(data) {
               console.dir(data);
             }
-          }).done(function() {
-          });
+          }).done(function() {});
         });
       });
   </script>

@@ -115,6 +115,15 @@
 					}
 					e.stopPropagation();
 				});
+
+				var $listenners = $('#listenners');
+				var text = $listenners.val();
+				var texts = text.length === 0 ? [] : text.split(',');
+				for (var i = 0; i < texts.length; i++) {
+					$('[data-id='+texts[i]+']').attr('checked','checked');
+					console.log(texts[i])
+				};
+
 				$('.check-listenners').on('click',function(){
 					var $this= $(this);
 					var id=$this.data('id')+'';
