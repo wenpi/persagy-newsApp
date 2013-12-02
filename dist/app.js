@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.bodyParser({
-	uploadDir: './public/ueditor/uploads'
+	uploadDir: './public/uploads'
 }));
 app.use(express.cookieParser());
 app.use(express.session({

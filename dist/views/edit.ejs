@@ -38,9 +38,21 @@
 			<div class="form-group">
 				<label for="inputText" class="col-sm-2 control-label">正文</label>
 				<div class="col-sm-10" >
-					<script type="text/plain" id="editor" style="width:100%;height:400px;" name="richText">
-						<%- news.richText %>
-					</script>
+					<textarea class="form-control" rows="10" id="inputSubtitle" name="richText" placeholder="请添加正文"><%- news.richText %></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label ">正文图片</label>
+				<div class="col-sm-10 " >
+					<input type="file" id="inputTextPic" >
+					<input type="hidden" id="inputTextPicName" name="textPic" value="<%= news.textPic %>">
+					<img id="imgTextPic" alt="上传图片" src="uploads/<%= news.textPic %>"><span id="uploadResult"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label ">短信内容</label>
+				<div class="col-sm-10 " >
+					<textarea class="form-control" rows="2" name="messageText"><%- news.messageText %></textarea>
 				</div>
 			</div>
 			<div class="form-group">
@@ -85,12 +97,6 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="inputText" class="col-sm-2 control-label ">短信内容</label>
-				<div class="col-sm-10 " >
-					<textarea class="form-control" rows="2" name="text"><%- news.text %></textarea>
-				</div>
-			</div>
-			<div class="form-group">
 				<label for="inputDate" class="col-sm-2 control-label">定时发布</label>
 				<div class="col-sm-5">
 					<input type="text" class="form-control" id="inputDate" value="<%= news.date %>" name="date" placeholder="2013-11-13 14:35:10">
@@ -102,7 +108,6 @@
 		</form>
 		<script type="text/javascript">
 			window.onload=function(){
-				var ue = UM.getEditor('editor');
 				$('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
 				$('.glyphicon').on('click', function (e) {
 					var children = $(this).parent().parent('li.parent_li').find(' > ul > li');
@@ -155,6 +160,33 @@
 					}
 					$listenners.val(texts.join(','));
 				});
+
+				var input=document.getElementById('inputTextPic'),
+					formdata=new FormData(),
+					reader = new FileReader();
+				input.addEventListener('change',function(e){
+					var file=this.files[0];
+					document.getElementById('uploadResult').innerHTML = '正在上传...';
+					reader.onloadend=function(e){
+						document.getElementById('imgTextPic').src=e.target.result;
+					};
+					reader.readAsDataURL(file);
+					formdata.append('image', file);
+					console.log(this.files);
+					$.ajax({
+						url:'upload',
+						type:'POST',
+						data:formdata,
+						processData:false,
+						contentType:false,
+						success:function(res){
+							console.log(res);
+							document.getElementById('uploadResult').innerHTML = res.result;
+							document.getElementById('inputTextPicName').value=res.fileUrl;
+						}
+					});
+				});
+
 			};
 		</script>
 		<%- include footer %>
