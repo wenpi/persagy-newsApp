@@ -396,6 +396,118 @@ News.getByDay = function(username, date, auto, callback) {
   });
 };
 
+News.getByMonth = function(username, date, auto, callback) {
+  mongo.openCheck(function(err, db) {
+    if (err) {
+      return callback(err);
+    }
+    var ep = new EventProxy();
+
+    Group.getListeners(db, username, function(err, root) {
+      ep.on('date', function(dateStr) {
+        db.collection("news", function(err, collection) {
+          if (err) {
+            return callback(err);
+          }
+          collection.find({
+            listeners: {
+              $in: getListeners(username, root)
+            },
+            month: dateStr,
+            isPub: true,
+            isDel: false
+          }, {
+            _id: 1,
+            sign: 1,
+            title: 1,
+            titlecolor: 1,
+            unit: 1,
+            subtitle: 1,
+            text: 1,
+            day: 1
+          }).toArray(function(err, news) {
+            if (err) {
+              return callback(err);
+            }
+            callback(null, news);
+          });
+        });
+      });
+      if (auto === 'current') {
+        ep.fire('date', date);
+      } else if (auto === 'left') {
+        db.collection("news", function(err, collection) {
+          if (err) {
+            return callback(err);
+          }
+          collection.findOne({
+            listeners: {
+              '$in': getListeners(username, root)
+            },
+            month: {
+              '$lte': date
+            },
+            isPub: true,
+            isDel: false
+          }, {
+            fields: {
+              _id: 0,
+              month: 1
+            },
+            limit: 1,
+            sort: {
+              date: -1
+            }
+          }, function(err, newOne) {
+            if (err) {
+              return callback(err);
+            }
+            if (newOne) {
+              ep.fire('date', newOne.month);
+            } else {
+              callback(null, []);
+            }
+          });
+        });
+      } else if (auto === 'right') {
+        db.collection("news", function(err, collection) {
+          if (err) {
+            return callback(err);
+          }
+          collection.findOne({
+            listeners: {
+              '$in': getListeners(username, root)
+            },
+            month: {
+              '$gte': date
+            },
+            isPub: true,
+            isDel: false
+          }, {
+            fields: {
+              _id: 0,
+              month: 1
+            },
+            limit: 1,
+            sort: {
+              date: 1
+            }
+          }, function(err, newOne) {
+            if (err) {
+              return callback(err);
+            }
+            if (newOne) {
+              ep.fire('date', newOne.month);
+            } else {
+              callback(null, []);
+            }
+          });
+        });
+      }
+    });
+  });
+};
+
 News.getListByMonth = function(username, date, callback) {
   mongo.openCheck(function(err, db) {
     if (err) {

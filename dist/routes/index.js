@@ -153,6 +153,35 @@ module.exports = function(app) {
       res.send(result);
     });
   });
+
+  app.post('/getNewsByMonth', function(req, res) {
+    News.getByMonth(req.body.username, req.body.date, req.body.auto, function(err, doc) {
+      var i = 0,
+        result = {
+          msg: null,
+          code: '0000',
+          intertype: 'dayRequest',
+          data: []
+        };
+
+      if (err) {
+        result.msg = err;
+        result.code = null;
+      } else {
+        if (doc && doc.length !== 0) {
+          for (i = 0; i < doc.length; i++) {
+            doc[i].textadd = '/newsText/' + doc[i]._id;
+            doc[i].date = doc[i].day;
+          }
+        } else {
+          doc = [];
+        }
+        result.data = doc;
+      }
+      res.send(result);
+    });
+  });
+
   // News.getListByMonth
   app.post('/getNewsListByMonth', function(req, res) {
     News.getListByMonth(req.body.username, req.body.date, function(err, doc) {
