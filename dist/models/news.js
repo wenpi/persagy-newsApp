@@ -17,7 +17,7 @@ function News(news) {
 
   this.sign = news.sign || '';
   this.title = news.title || '';
-  this.titlecolor = news.titlecolor || '';
+  this.titlecolor = news.titlecolor || '#000000';
   this.unit = news.unit || '';
   this.subtitle = news.subtitle || '';
   this.text = news.text || '';
@@ -417,14 +417,19 @@ News.getByMonth = function(username, date, auto, callback) {
             isPub: true,
             isDel: false
           }, {
-            _id: 1,
-            sign: 1,
-            title: 1,
-            titlecolor: 1,
-            unit: 1,
-            subtitle: 1,
-            text: 1,
-            day: 1
+            fields: {
+              _id: 1,
+              sign: 1,
+              title: 1,
+              titlecolor: 1,
+              unit: 1,
+              subtitle: 1,
+              text: 1,
+              day: 1
+            },
+            sort: {
+              date: 1
+            }
           }).toArray(function(err, news) {
             if (err) {
               return callback(err);
