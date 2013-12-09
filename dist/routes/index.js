@@ -178,6 +178,7 @@ module.exports = function(app) {
         }
         result.data = doc;
       }
+      console.dir(result);
       res.send(result);
     });
   });
@@ -350,8 +351,10 @@ module.exports = function(app) {
     // var temp_path=req.files.thumbnail.path;
     var target_path = req.files.upfile.path;
     var paths = target_path.split('\\');
-
-    console.dir(paths);
-    res.send("<script>parent.UM.getEditor('editor').getWidgetCallback('image')('" + paths[paths.length - 1] + "','SUCCESS')</script>");
+    if (req.query.type === 'ajax') {
+      res.send(paths[paths.length - 1]);
+    } else {
+      res.send("<script>parent.UM.getEditor('editor').getWidgetCallback('image')('" + paths[paths.length - 1] + "','SUCCESS')</script>");
+    }
   });
 };
