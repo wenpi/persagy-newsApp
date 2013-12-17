@@ -1,0 +1,1 @@
+node %cd%\dist\app.js

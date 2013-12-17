@@ -178,7 +178,7 @@ module.exports = function(app) {
         }
         result.data = doc;
       }
-      console.dir(result);
+      // console.dir(result);
       res.send(result);
     });
   });
@@ -221,7 +221,7 @@ module.exports = function(app) {
   });
 
   app.post('/addFavorite', function(req, res) {
-    console.dir(req.body);
+    // console.dir(req.body);
     Favorite.add(req.body.username, req.body.newsId, function(err, doc) {
       var result = {
         msg: null,
