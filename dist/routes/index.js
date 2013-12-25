@@ -275,6 +275,24 @@ module.exports = function(app) {
     });
   });
 
+  app.post('/getNewsExist', function(req, res) {
+    News.getExist(req.body.username, function(err, doc) {
+      var result = {
+        msg: null,
+        code: '0000',
+        intertype: 'BooleanRequest',
+        data: []
+      };
+      if (err) {
+        result.msg = err;
+        result.code = null;
+      } else {
+        result.data = doc;
+      }
+      res.send(result);
+    });
+  });
+
   app.post('/login', function(req, res) {
     var result = {
       msg: null,

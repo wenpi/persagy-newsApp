@@ -668,6 +668,53 @@ News.getExistByMonth = function(username, date, callback) {
   });
 };
 
+News.getExist = function(username, callback) {
+  mongo.openCheck(function(err, db) {
+    if (err) {
+      return callback(err);
+    }
+    Group.getListeners(db, username, function(err, root) {
+      // console.dir(getListeners(username,root));
+      // 
+      db.collection("news", function(err, collection) {
+        if (err) {
+
+          return callback(err);
+        }
+        //{'listeners':{"$in": ['10000001']}}
+        collection.find({
+          'listeners': {
+            "$in": getListeners(username, root)
+          },
+          isPub: true,
+          isDel: false
+        }, {
+          fields: {
+            _id: 0,
+            day: 1
+          },
+          sort: {
+            day: -1
+          }
+        }).toArray(function(err, news) {
+          if (err) {
+            return callback(err);
+          }
+          var i = 0,
+            arr = [];
+          for (i = 0; i < news.length; i++) {
+            if (news[i - 1] && news[i - 1].day === news[i].day) {
+              continue;
+            }
+            arr.push(news[i].day);
+          }
+          callback(null, arr);
+        });
+      });
+    });
+  });
+};
+
 News.doAutopublish = function() {
   mongo.openCheck(function(err, db) {
     if (err) {
