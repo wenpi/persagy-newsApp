@@ -29,7 +29,7 @@ module.exports = function(app) {
         news = [];
       }
       res.render('time', {
-        title: '已发布列表',
+        title: '定时发布列表',
         name: 'time',
         news: news,
         error: req.flash('error').toString(),
@@ -72,6 +72,7 @@ module.exports = function(app) {
 
 
   app.post('/edit', function(req, res) {
+
     var body = req.body,
       news = new News({
         sign: body.sign,
@@ -80,18 +81,25 @@ module.exports = function(app) {
         unit: body.unit,
         subtitle: body.subtitle,
         listeners: body.listeners,
+        listenersName: body.listenersName,
         text: body.text,
         richText: body.richText,
         date: body.date
       });
-    news.save(body.id, function(err) {
-      if (err) {
-        req.flash('error', body.id ? '编辑失败' : '发布失败!');
-      } else {
-        req.flash('success', body.id ? '编辑成功' : '发布成功!');
-      }
+    if (body.title && body.subtitle && body.listeners && body.richText) {
+      news.save(body.id, function(err) {
+        if (err) {
+          req.flash('error', body.id ? '编辑失败' : '发布失败!');
+        } else {
+          req.flash('success', body.id ? '编辑成功' : '发布成功!');
+        }
+        res.redirect('/edit'); //注册成功后返回主页
+      });
+    } else {
+      req.flash('error', '请填写完整信息!');
       res.redirect('/edit'); //注册成功后返回主页
-    });
+    }
+
   });
 
   app.get('/newsText/:id', function(req, res) {
@@ -368,6 +376,7 @@ module.exports = function(app) {
   app.post('/upload', function(req, res) {
     // var temp_path=req.files.thumbnail.path;
     var target_path = req.files.upfile.path;
+    console.dir(req.files.upfile.path);
     var paths = target_path.split('\\');
     if (req.query.type === 'ajax') {
       res.send(paths[paths.length - 1]);

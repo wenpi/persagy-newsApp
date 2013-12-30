@@ -96,9 +96,10 @@
 					<input type="text" class="form-control" id="inputDate" value="<%= news.date %>" name="date" placeholder="2013-11-13 14:35:10">
 				</div>
 				<div class="col-sm-5">
-					<button type="submit" class="btn btn-primary">添加|保存</button>
+					<button type="submit" class="btn btn-primary">保存</button>
 				</div>
 			</div>
+			<input type="hidden" id="listenersName" name="listenersName">
 		</form>
 		<script type="text/javascript">
 			window.onload=function(){
@@ -115,24 +116,29 @@
 					}
 					e.stopPropagation();
 				});
-
+				var listenersName='';
+				var span;
 				var $listenners = $('#listenners');
 				var text = $listenners.val();
 				var texts = text.length === 0 ? [] : text.split(',');
+				var $item;
 				for (var i = 0; i < texts.length; i++) {
-					$('[data-id='+texts[i]+']').attr('checked','checked');
-					console.log(texts[i])
+					$item=$('[data-id='+texts[i]+']');
+					$item.attr('checked','checked');
+					span = i === (texts.length - 1) ? '' : ',';
+					listenersName += $item.parent().text().trim() + span;
 				};
+				$("#listenersName").val(listenersName);
 
 				$('.check-listenners').on('click',function(){
 					var $this= $(this);
+					var i;
 					var id=$this.data('id')+'';
-					console.log(id)
 					var $listenners=$('#listenners');
 					var text=$listenners.val();
 					var texts=text.length===0?[]:text.split(',');
 					var isFind=false;
-					for (var i = 0; i < texts.length; i++) {
+					for ( i = 0; i < texts.length; i++) {
 						if(texts[i]==id){
 							isFind=true;
 							break;
@@ -144,8 +150,7 @@
 						}
 					}else{
 						if(isFind){
-							for (var i = 0; i < texts.length; i++) {
-								console.log(texts[i]);
+							for ( i = 0; i < texts.length; i++) {
 								if(texts[i]===id){
 									texts.splice(i,1);
 									break;
@@ -153,7 +158,14 @@
 							};
 						}
 					}
-					$listenners.val(texts.join(','));
+					listenersName='';
+			    for (i = 0; i < texts.length; i++) {
+			      span = i === (texts.length - 1) ? '' : ',';
+			      listenersName += $('[data-id=' + texts[i] + ']').parent().text().trim() + span;
+			    }
+			    console.log(listenersName);
+			    $("#listenersName").val(listenersName);
+			    $listenners.val(texts.join(','));
 				});
 			};
 		</script>

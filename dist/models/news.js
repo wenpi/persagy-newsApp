@@ -14,7 +14,7 @@ function News(news) {
       listeners.splice(i, 1);
     }
   }
-
+  this.listenersName = news.listenersName || '';
   this.sign = news.sign || '';
   this.title = news.title || '';
   this.titlecolor = news.titlecolor || '#000000';
@@ -57,6 +57,7 @@ News.prototype.save = function(id, callback) {
     text: this.text,
     richText: this.richText,
     listeners: this.listeners,
+    listenersName: this.listenersName,
     date: time.format("YYYY-MM-DD HH:mm:ss"),
     month: time.format("YYYY-MM"),
     day: time.format("YYYY-MM-DD"),
@@ -85,6 +86,7 @@ News.prototype.save = function(id, callback) {
             "text": post.text,
             "richText": post.richText,
             "listeners": post.listeners,
+            "listenersName": post.listenersName,
             "date": post.date,
             "month": post.month,
             "day": post.day,
