@@ -23,30 +23,46 @@
 				<tr>
 					<td><%= item.sign + item.title + item.unit %></td>
 					<td><%= item.subtitle %></td>
-					<td><%= item.listeners %></td>
+					<td><%= item.listenersName %></td>
 					<td><%= item.date %></td>
 					<td><a href="/edit?id=<%=item._id %>"><span class="glyphicon glyphicon-edit"></span></a></td>
-					<td><a href="#"><span data-id="<%=item._id %>" class="glyphicon glyphicon-remove"></span></a></td>
+					<td><a href="#"><span data-id="<%=item._id %>" class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#myModal"></span></a></td>
 				</tr>
 			<% }) %>
 		</tbody>
 	</table>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h4>确认删除这条新闻吗?</h4>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button id="doDel" type="button" class="btn btn-primary">确认</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 	<script type="text/javascript">
-		window.onload=function(){
-			$('.glyphicon-remove').click(function(){
-				$.ajax({
-					url: '/del',
-					type: 'post',
-					dataType: 'json',
-					data: {
-						id: $(this).data('id')
-					},
-					success: function() {
-						window.location.reload();
-					}
-				});
-			});
+		window.onload = function() {
+		  $('.glyphicon-remove').click(function() {
+		    $("#doDel").data('id', $(this).data('id'));
+		  });
+		  $("#doDel").click(function(){
+		  	$.ajax({
+		      url: '/del',
+		      type: 'post',
+		      dataType: 'json',
+		      data: {
+		        id: $(this).data('id')
+		      },
+		      success: function() {
+		        window.location.reload();
+		      }
+		    });
+		  });
 		};
 	</script>
 <%- include footer %>
