@@ -93,11 +93,11 @@ module.exports = function(app) {
         } else {
           req.flash('success', body.id ? '编辑成功' : '发布成功!');
         }
-        res.redirect('/edit'); //注册成功后返回主页
+        res.redirect('back');
       });
     } else {
       req.flash('error', '请填写完整信息!');
-      res.redirect('/edit'); //注册成功后返回主页
+      res.redirect('/edit');
     }
 
   });
