@@ -2,7 +2,7 @@ var settings = require('../setting'),
   Db = require('mongodb').Db,
   Connection = require('mongodb').Connection,
   Server = require('mongodb').Server,
-  db = new Db(settings.db, new Server(settings.host, Connection.DEFAULT_PORT), {
+  db = new Db(settings.db, new Server(settings.host, settings.port || Connection.DEFAULT_PORT), {
     safe: true
   });
 

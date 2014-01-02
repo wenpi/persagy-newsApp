@@ -1,5 +1,6 @@
 module.exports = {
-	cookieSecret: 'news',
-	db: 'newsapp',
-	host: 'localhost'
+  cookieSecret: 'news',
+  db: 'newsapp',
+  host: 'localhost',
+  port: null
 };
