@@ -46,27 +46,27 @@
 			<div class="form-group">
 				<label for="inputText" class="col-sm-2 control-label">发布对象</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="listenners" value="<%- news.listeners %>"  name="listeners" style="margin-bottom:10px">
+					<input type="text" class="form-control" id="listenersName" value="<%- news.listenersName %>"  name="listenersName" style="margin-bottom:10px" readonly>
 					<div class="tree well"><!-- style="overflow:auto;height:200px" -->
 						<ul>
 							<li>
-								<span><i class="glyphicon glyphicon-folder-open"></i> 全选 <input class="check-listenners" data-id="1" type="checkbox"></span>
+								<span><i class="glyphicon glyphicon-folder-open"></i> 全选 <input class="check-listeners" data-id="1" type="checkbox"></span>
 								<ul>
 									<% for(var i = 0; i < groups.subGroup.length; i++) { %>
 									<li>
-										<span><i class="glyphicon glyphicon-minus-sign"></i> <%= groups.subGroup[i].name %> <input class="check-listenners" data-id="<%= groups.subGroup[i].id %>" type="checkbox"></span>
+										<span><i class="glyphicon glyphicon-minus-sign"></i> <%= groups.subGroup[i].name %> <input class="check-listeners" data-id="<%= groups.subGroup[i].id %>" type="checkbox"></span>
 										<ul>
 											<% for(var j = 0; j < groups.subGroup[i].subGroup.length; j++) { %>
 											<li>
-												<span><i class="glyphicon glyphicon-minus-sign"></i> <%= groups.subGroup[i].subGroup[j].name %> <input class="check-listenners" data-id="<%= groups.subGroup[i].subGroup[j].id %>" type="checkbox"></span>
+												<span><i class="glyphicon glyphicon-minus-sign"></i> <%= groups.subGroup[i].subGroup[j].name %> <input class="check-listeners" data-id="<%= groups.subGroup[i].subGroup[j].id %>" type="checkbox"></span>
 												<ul>
 													<% for(var k = 0; k < groups.subGroup[i].subGroup[j].subGroup.length; k++) { %>
 													<li>
-														<span><i class="glyphicon glyphicon-minus-sign"></i> <%= groups.subGroup[i].subGroup[j].subGroup[k].name %> <input class="check-listenners" data-id="<%= groups.subGroup[i].subGroup[j].subGroup[k].id %>" type="checkbox"></span>
+														<span><i class="glyphicon glyphicon-minus-sign"></i> <%= groups.subGroup[i].subGroup[j].subGroup[k].name %> <input class="check-listeners" data-id="<%= groups.subGroup[i].subGroup[j].subGroup[k].id %>" type="checkbox"></span>
 														<ul>
 															<% for(var t = 0; t < groups.subGroup[i].subGroup[j].subGroup[k].subGroup.length; t++) { %>
 															<li>
-																<span><%= groups.subGroup[i].subGroup[j].subGroup[k].subGroup[t].name %> <input class="check-listenners" data-id="<%= groups.subGroup[i].subGroup[j].subGroup[k].subGroup[t].id %>" type="checkbox"></span>
+																<span><%= groups.subGroup[i].subGroup[j].subGroup[k].subGroup[t].name %> <input class="check-listeners" data-id="<%= groups.subGroup[i].subGroup[j].subGroup[k].subGroup[t].id %>" type="checkbox"></span>
 															</li>
 															<% } %>
 														</ul>
@@ -99,7 +99,7 @@
 					<button type="submit" class="btn btn-primary">保存</button>
 				</div>
 			</div>
-			<input type="hidden" id="listenersName" name="listenersName">
+			<input type="hidden" id="listeners" name="listeners" value="<%- news.listeners %>">
 		</form>
 		<script type="text/javascript">
 			window.onload=function(){
@@ -118,8 +118,8 @@
 				});
 				var listenersName='';
 				var span;
-				var $listenners = $('#listenners');
-				var text = $listenners.val();
+				var $listeners = $('#listeners');
+				var text = $listeners.val();
 				var texts = text.length === 0 ? [] : text.split(',');
 				var $item;
 				for (var i = 0; i < texts.length; i++) {
@@ -130,12 +130,12 @@
 				};
 				$("#listenersName").val(listenersName);
 
-				$('.check-listenners').on('click',function(){
+				$('.check-listeners').on('click',function(){
 					var $this= $(this);
 					var i;
 					var id=$this.data('id')+'';
-					var $listenners=$('#listenners');
-					var text=$listenners.val();
+					var $listeners=$('#listeners');
+					var text=$listeners.val();
 					var texts=text.length===0?[]:text.split(',');
 					var isFind=false;
 					for ( i = 0; i < texts.length; i++) {
@@ -143,7 +143,7 @@
 							isFind=true;
 							break;
 						}
-					};
+					}
 					if(this.checked){
 						if(!isFind){
 							texts.push(id);
@@ -155,7 +155,7 @@
 									texts.splice(i,1);
 									break;
 								}
-							};
+							}
 						}
 					}
 					listenersName='';
@@ -165,7 +165,7 @@
 			    }
 			    console.log(listenersName);
 			    $("#listenersName").val(listenersName);
-			    $listenners.val(texts.join(','));
+			    $listeners.val(texts.join(','));
 				});
 			};
 		</script>

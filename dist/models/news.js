@@ -48,7 +48,7 @@ News.prototype.save = function(id, callback) {
     time = moment();
     isPub = true;
   }
-  post = {
+  var post = {
     sign: this.sign,
     title: this.title,
     titlecolor: this.titlecolor,
