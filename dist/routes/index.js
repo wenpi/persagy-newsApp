@@ -367,9 +367,9 @@ module.exports = function(app) {
           } else {
             result.successful = true;
           }
-          res.send(result);
         });
       }
+      res.send(result);
     });
   });
 
