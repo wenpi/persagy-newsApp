@@ -93,7 +93,7 @@ module.exports = function(app) {
         } else {
           req.flash('success', body.id ? '编辑成功' : '发布成功!');
         }
-        res.redirect('back');
+        res.redirect('/');
       });
     } else {
       req.flash('error', '请填写完整信息!');
