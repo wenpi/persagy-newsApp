@@ -356,16 +356,20 @@ module.exports = function(app) {
       if (err) {
         result.msg = err;
         result.code = null;
+        res.send(result);
       } else if (user.userpwd !== req.body.oldPassword) {
         result.successful = false;
+        result.code = null;
         result.message = '原密码不正确';
+        res.send(result);
       } else {
-        User.changePassword(req.body.username, req.body.newPassword, function() {
+        User.changePassword(req.body.username, req.body.newPassword, function(err) {
           if (err) {
             result.msg = err;
             result.code = null;
           } else {
             result.successful = true;
+            result.message = '修改成功';
           }
         });
       }
@@ -376,7 +380,7 @@ module.exports = function(app) {
   app.post('/upload', function(req, res) {
     // var temp_path=req.files.thumbnail.path;
     var target_path = req.files.upfile.path;
-    console.dir(req.files.upfile.path);
+    // console.dir(req.files.upfile.path);
     var paths = target_path.split('\\');
     if (req.query.type === 'ajax') {
       res.send(paths[paths.length - 1]);
