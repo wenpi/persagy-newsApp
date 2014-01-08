@@ -17,7 +17,7 @@ function News(news) {
   this.listenersName = news.listenersName || '';
   this.sign = news.sign || '';
   this.title = news.title || '';
-  this.titlecolor = news.titlecolor || '#000000';
+  this.titlecolor = news.titlecolor || '#292929';
   this.unit = news.unit || '';
   this.subtitle = news.subtitle || '';
   this.text = news.text || '';
