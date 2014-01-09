@@ -301,6 +301,24 @@ module.exports = function(app) {
     });
   });
 
+  app.post('/getNewsEndDate', function(req, res) {
+    News.getEndDate(req.body.username, function(err, doc) {
+      var result = {
+        msg: null,
+        code: '0000',
+        intertype: 'getNewsEndDate',
+        date: null
+      };
+      if (err) {
+        result.msg = err;
+        result.code = null;
+      } else {
+        result.date = doc;
+      }
+      res.send(result);
+    });
+  });
+
   app.post('/login', function(req, res) {
     var result = {
       msg: null,

@@ -2,7 +2,6 @@ var mongo = require('./db');
 var ObjectID = require('mongodb').ObjectID;
 var moment = require('moment');
 var EventProxy = require('eventproxy');
-var User = require('./users');
 var Group = require('./groups');
 
 function News(news) {
@@ -561,7 +560,7 @@ News.getStartDate = function(username, callback) {
       startDate: start,
       endDate: end
     });
-  })
+  });
   mongo.openCheck(function(err, db) {
     if (err) {
       return callback(err);
@@ -621,7 +620,43 @@ News.getStartDate = function(username, callback) {
       });
     });
   });
-}
+};
+
+News.getEndDate = function(username, callback) {
+  mongo.openCheck(function(err, db) {
+    if (err) {
+      return callback(err);
+    }
+    Group.getListeners(db, username, function(err, root) {
+      db.collection("news", function(err, collection) {
+        if (err) {
+          return callback(err);
+        }
+        collection.findOne({
+          listeners: {
+            '$in': getListeners(username, root)
+          },
+          isPub: true,
+          isDel: false
+        }, {
+          fields: {
+            _id: 0,
+            date: 1
+          },
+          limit: 1,
+          sort: {
+            date: -1
+          }
+        }, function(err, newOne) {
+          if (err) {
+            return callback(err);
+          }
+          callback(null, newOne ? newOne.date : newOne);
+        });
+      });
+    });
+  });
+};
 
 News.getExistByMonth = function(username, date, callback) {
   mongo.openCheck(function(err, db) {
@@ -724,7 +759,7 @@ News.doAutopublish = function() {
     }
     db.collection("news", function(err, collection) {
       if (err) {
-        return callback(err);
+        return;
       }
       collection.update({
         isPub: false,
@@ -742,10 +777,10 @@ News.doAutopublish = function() {
         if (err) {
           console.log('autopublish error');
         }
-      })
+      });
     });
   });
-}
+};
 
 function getListeners(username, root) {
   var listeners = [],
