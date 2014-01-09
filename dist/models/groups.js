@@ -1,5 +1,3 @@
-var mongo = require('./db');
-var User = require('./users');
 var EventProxy = require('eventproxy');
 
 function Group() {
@@ -115,7 +113,6 @@ function treeFactory(list) {
 function findSubNode(root, list) {
   var i,
     subList = [],
-    id,
     name,
     tempNode;
   for (i = 0; i < list.length; i++) {
