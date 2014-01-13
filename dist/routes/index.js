@@ -175,6 +175,7 @@ module.exports = function(app) {
       if (err) {
         result.msg = err;
         result.code = null;
+        res.send(result);
       } else {
         if (doc && doc.length !== 0) {
           for (i = 0; i < doc.length; i++) {
@@ -185,9 +186,18 @@ module.exports = function(app) {
           doc = [];
         }
         result.data = doc;
+
+        News.getStartDate(req.body.username, function(err, doc) {
+          if (err) {
+            result.msg = err;
+            result.code = null;
+          } else {
+            result.startDate = doc.startDate;
+            result.endDate = doc.endDate;
+          }
+          res.send(result);
+        });
       }
-      // console.dir(result);
-      res.send(result);
     });
   });
 
