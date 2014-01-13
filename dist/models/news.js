@@ -536,11 +536,16 @@ News.getListByMonth = function(username, date, callback) {
           isPub: true,
           isDel: false
         }, {
-          _id: 1,
-          sign: 1,
-          title: 1,
-          unit: 1,
-          subtitle: 1
+          fields: {
+            _id: 1,
+            sign: 1,
+            title: 1,
+            unit: 1,
+            subtitle: 1
+          },
+          sort: {
+            date: -1
+          }
         }).toArray(function(err, news) {
 
           if (err) {
